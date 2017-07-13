@@ -8,7 +8,7 @@ from pylab import *
 
 
 R = 1 # Radius of loop (mm)
-wr = 0 # Radius of wire (mm)
+wr = 0.1 # Radius of wire (mm)
 p = 0.1 # Pitch of wire, centre-to-centre (mm)
 N = 100 # Number of segments in single loop of wire
 n = 5 # Number of loops of wire
@@ -70,6 +70,11 @@ for i in range(y.size):
 fig, ax = plt.subplots()
 for i in range(n):
     plt.plot(R*np.sin(np.pi/2),(4*i+1)*p/2,'ok',R*np.sin(3*np.pi/2),(4*i+3)*p/2,'+k')
+    circ = plt.Circle((R*np.sin(np.pi/2),(4*i+1)*p/2), radius=wr, color='k', alpha=0.5)
+    ax.add_patch(circ)
+    circ = plt.Circle((R*np.sin(3*np.pi/2),(4*i+3)*p/2), radius=wr, color='k', alpha=0.5)
+    ax.add_patch(circ)
+
 ax.quiver(Y, Z, By/norms, Bz/norms)
 ax.set(aspect=1, title='Quiver Plot - field lines')
 plt.savefig('field-loop.svg',transparent=True, bbox_inches='tight', pad_inches=0)
