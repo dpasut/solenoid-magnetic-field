@@ -1,6 +1,7 @@
 # Author: Daniel Pasut <daniel.pasut@uoit.ca>
 
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from numpy import linalg as LA
@@ -19,9 +20,9 @@ I = 10 # Current
 C = mu*I/(4*np.pi)
 
 x = np.linspace(-2,2,30) # Positions for x
-y = np.linspace(-2,2,30) # Positions for y
-z = np.linspace(-2,p*n*2+2,30) # Positions for z
-Y, Z = np.mgrid[-2:2:30j,-2:p*n*2+2:30j] # Grid for y/z
+y = np.linspace(-2.1,2.1,30) # Positions for y
+z = np.linspace(-1.1,p*n*2+1.1,30) # Positions for z
+Y, Z = np.mgrid[-2.1:2.1:30j,-1.1:p*n*2+1.1:30j] # Grid for y/z
 
 # x's are all zero, looking at plane
 Bx = np.zeros([y.size, z.size]) # x components don't change
@@ -68,14 +69,17 @@ for i in tqdm(range(y.size)):
 
 # Plot quiver diagram
 fig, ax = plt.subplots()
+
 for i in range(n):
-    plt.plot(R*np.sin(np.pi/2),(4*i+1)*p/2,'ok',R*np.sin(3*np.pi/2),(4*i+3)*p/2,'+k')
     circ = plt.Circle((R*np.sin(np.pi/2),(4*i+1)*p/2), radius=wr, color='k', alpha=0.5)
     ax.add_patch(circ)
     circ = plt.Circle((R*np.sin(3*np.pi/2),(4*i+3)*p/2), radius=wr, color='k', alpha=0.5)
     ax.add_patch(circ)
+    plt.plot(R*np.sin(np.pi/2),(4*i+1)*p/2,'ok',R*np.sin(3*np.pi/2),(4*i+3)*p/2,'*k')
 
 ax.quiver(Y, Z, By/norms, Bz/norms)
+xlim( (Y.min(), Y.max()) )  # set the xlim to xmin, xmax
+ylim( (Z.min(), Z.max()) )
 ax.set(aspect=1, title='Quiver Plot - field lines')
 plt.savefig('field-loop.svg',transparent=True, bbox_inches='tight', pad_inches=0)
 plt.savefig('field-loop.jpg', bbox_inches='tight', pad_inches=0)
