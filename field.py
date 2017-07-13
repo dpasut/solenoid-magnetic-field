@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from numpy import linalg as LA
 from pylab import *
+from tqdm import tqdm
 
 
 R = 1 # Radius of loop (mm)
@@ -33,7 +34,6 @@ norms = np.zeros([y.size,z.size]) # matrix for norms at each point
 def find_B(x,y,z,theta,R,N):
     cross = 0
     for k in range(1,theta.size):
-
         dl = np.array([R*(np.cos(theta[k])-np.cos(theta[k-1])),
                            R*(np.sin(theta[k])-np.sin(theta[k-1])),
                            p/N])
@@ -60,11 +60,11 @@ plt.show()
 
 
 # Calculate the magnetic field and find norms
-for i in range(y.size):
+for i in tqdm(range(y.size)):
    for j in range(z.size):
        Bx[i,j], By[i,j], Bz[i,j] = find_B(0,y[i],z[j],theta,R,N)
-       print(i,j)
        norms[i,j] = LA.norm([Bx[i,j], By[i,j], Bz[i,j]])
+
 
 # Plot quiver diagram
 fig, ax = plt.subplots()
