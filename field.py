@@ -29,7 +29,7 @@ Bz = np.zeros([y.size, z.size]) # z components of field matrix
 norms = np.zeros([y.size,z.size]) # matrix for norms at each point
 
 
-# Function to do summation over all
+# Function to do summation over all segments of wire
 def find_B(x,y,z,theta,R,N):
     cross = 0
     for k in range(1,theta.size):
@@ -45,12 +45,10 @@ def find_B(x,y,z,theta,R,N):
     return cross
 
 
-
+# Plot the solenoid in 3-D
 for i in range(0,theta.size):
     theta[i] = i*2*np.pi/N
-
 wire = np.array([R*np.cos(theta), R*np.sin(theta),p*theta/np.pi])
-
 
 fig = plt.figure()
 ax = fig.gca(projection='3d')
@@ -60,14 +58,16 @@ plt.savefig('wire-loop.svg',transparent=True, bbox_inches='tight', pad_inches=0)
 plt.savefig('wire-loop.jpg', bbox_inches='tight', pad_inches=0)
 plt.show()
 
+
+# Calculate the magnetic field and find norms
 for i in range(y.size):
    for j in range(z.size):
        Bx[i,j], By[i,j], Bz[i,j] = find_B(0,y[i],z[j],theta,R,N)
        print(i,j)
        norms[i,j] = LA.norm([Bx[i,j], By[i,j], Bz[i,j]])
 
+# Plot quiver diagram
 fig, ax = plt.subplots()
-
 for i in range(n):
     plt.plot(R*np.sin(np.pi/2),(4*i+1)*p/2,'ok',R*np.sin(3*np.pi/2),(4*i+3)*p/2,'+k')
 ax.quiver(Y, Z, By/norms, Bz/norms)
