@@ -1,0 +1,30 @@
+# ignore objects and archives, anywhere in the tree.
+#*.[oa]
+# ignore generated html files,
+#*.html
+# except foo.html which is maintained by hand
+#!foo.html
+
+Assignments/Assignment2/Output*
+*.out
+*.dvi
+*.txt
+*.prn
+*.mod
+*.log
+*.fls
+*.fdb_latexmk
+*.aux
+*.*~
+*.toc
+*.x
+<<<<<<< HEAD
+wiki/*
+=======
+<<<<<<< HEAD
+#*.*#
+\#*.*\#
+*/papers/*
+Assignments/Assignment4/papers/*
+*.dat
+
