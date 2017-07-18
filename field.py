@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Author: Daniel Pasut <daniel.pasut@uoit.ca>
 
 import numpy as np
@@ -16,7 +17,7 @@ N = 100 # Number of segments in single loop of wire
 n = 5 # Number of loops of wire
 theta = np.empty(n*N)
 mu = 1 # Magnetic suceptibility
-I = 10 # Current
+I = -10 # Current
 C = mu*I/(4*np.pi)
 
 x = np.linspace(-2,2,30) # Positions for x
