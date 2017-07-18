@@ -9,7 +9,7 @@ from numpy import linalg as LA
 from pylab import *
 from tqdm import tqdm
 
-
+gs = 30 # Grid spacing
 R = 1 # Radius of loop (mm)
 wr = 0.1 # Radius of wire (mm)
 p = 0.1 # Pitch of wire, centre-to-centre (mm)
@@ -20,10 +20,10 @@ mu = 1 # Magnetic suceptibility
 I = -10 # Current
 C = mu*I/(4*np.pi)
 
-x = np.linspace(-2,2,30) # Positions for x
-y = np.linspace(-2.1,2.1,30) # Positions for y
-z = np.linspace(-1.1,p*n*2+1.1,30) # Positions for z
-Y, Z = np.mgrid[-2.1:2.1:30j,-1.1:p*n*2+1.1:30j] # Grid for y/z
+x = np.linspace(-2,2,gs) # Positions for x
+y = np.linspace(-2.1,2.1,gs) # Positions for y
+z = np.linspace(-1.1,p*n*2+1.1,gs) # Positions for z
+Y, Z = np.meshgrid(y,z, indexing = 'ij') # Grid for y/z
 
 # x's are all zero, looking at plane
 Bx = np.zeros([y.size, z.size]) # x components don't change
