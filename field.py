@@ -32,17 +32,21 @@ norms = np.zeros([y.size,z.size]) # matrix for norms at each point
 
 
 # Function to do summation over all segments of wire
-def find_B(x,y,z,theta,R,N):
+def find_B(pos,theta,R,N,wr):
     cross = 0
     for k in range(1,theta.size):
-        dl = np.array([R*(np.cos(theta[k])-np.cos(theta[k-1])),
-                           R*(np.sin(theta[k])-np.sin(theta[k-1])),
-                           p/N])
         rs = np.array([R*np.cos(theta[k]-np.pi/N),
                        R*np.sin(theta[k]-np.pi/N),
                        (p*(theta[k]-np.pi/N))/np.pi])
-        r = rs - np.array([0, y, z])
-        cross += C*np.cross(dl,r)/ LA.norm(r)**3
+        r = rs - pos
+        dl = np.array([R*(np.cos(theta[k])-np.cos(theta[k-1])),
+                           R*(np.sin(theta[k])-np.sin(theta[k-1])),
+                           p/N])
+        if LA.norm(r) <= 1.35*wr:
+            inwire = np.array([0, 0, 0])
+            return inwire
+        else:
+            cross += C*np.cross(dl,r)/ LA.norm(r)**3
     return cross
 
 
@@ -63,7 +67,8 @@ plt.show()
 # Calculate the magnetic field and find norms
 for i in tqdm(range(y.size)):
    for j in range(z.size):
-       Bx[i,j], By[i,j], Bz[i,j] = find_B(0,y[i],z[j],theta,R,N)
+       pos = np.array([0, y[i], z[j]])
+       Bx[i,j], By[i,j], Bz[i,j] = find_B(pos, theta, R, N, wr)
        norms[i,j] = LA.norm([Bx[i,j], By[i,j], Bz[i,j]])
 
 
