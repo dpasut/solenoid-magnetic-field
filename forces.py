@@ -123,10 +123,53 @@ def funcmag(X, t):
 def run(X0):
     X = odeint(func, X0, t)
     Xmag = odeint(funcmag,X0,t)
+    #print(Xmag[:,2])
     return X, Xmag
 
 
 
 
 if __name__ == '__main__':
-    run()
+    for i in range(0, theta.size):
+        theta[i] = i*2*np.pi/N
+
+
+   #fig = plt.subplots(figsize=(20, 16), dpi=600)
+
+    #plt.plot(t,X[:,2],'r-', lw=5, label='No Magnetic Field')
+    #plt.plot(t,Xmag[Xmag[:,2]>2*p*n,2],'b-', lw=5, label='Magnetic Field')
+    #plt.axhline(y=2, color='k', linestyle='-',lw=5, label='Bottom of Dish')
+    #plt.xlabel('t/T', fontsize=30)
+    #plt.ylabel('Z/L', fontsize=30)
+    #plt.tick_params(axis='both', which='major', labelsize=30)
+    #plt.legend(['No Magnetic Field', 'Magnetic Field', 'Bottom of Dish'], fontsize=30)
+    #plt.savefig('diff.png', transparent=True,
+    #            bbox_inches='tight', pad_inches=0)
+    #plt.savefig('diff.jpg', bbox_inches='tight', pad_inches=0)
+    #plt.show()
+
+
+    fig = plt.figure()#figsize=(20, 16), dpi=600, facecolor='w', edgecolor='k')
+    ax = fig.gca(projection='3d')
+
+    X0 = [0, 0, 2*p*n+1]
+    X, Xmag = run(X0)
+    ax.plot(X[:,0],X[:,1],X[:,2], label='test',LineWidth=3)
+
+    for i in tqdm(range(0, 10)):
+        thetaval = i*2*np.pi/10
+        X0= [np.cos(thetaval), np.sin(thetaval), 2*p*n+1]
+        X, Xmag = run(X0)
+
+        ax.plot(Xmag[Xmag[:,2]>2*p*n,0],Xmag[Xmag[:,2]>2*p*n,1] ,Xmag[Xmag[:,2]>2*p*n,2], label='wire', LineWidth=5)
+
+    ax.set_xlabel('\n' + 'X axis')#, fontsize=30, linespacing=4)
+    ax.set_ylabel('\n' + 'Y axis')#, fontsize=30, linespacing=4)
+    ax.set_zlabel('\n' + 'Z axis')#, fontsize=30, linespacing=4)
+    #ax.xaxis._axinfo['label']['space_factor'] = 100
+    #plt.legend(['Magnetic Field', 'No Magnetic Field'], fontsize=30)
+
+    #plt.tick_params(axis='both', which='major', labelsize=30)
+    #plt.savefig('traj_test.png', transparent=True,
+    #            bbox_inches='tight', pad_inches=0)
+    plt.show()
