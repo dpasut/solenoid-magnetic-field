@@ -52,7 +52,7 @@ def find_B(pos, theta, R, N, wr):
         rs = np.array([R*np.cos(theta[k]-np.pi/N),
                        R*np.sin(theta[k]-np.pi/N),
                        (p*(theta[k]-np.pi/N))/np.pi])
-        r = rs - pos
+        r = pos - rs
         dl = np.array([R*(np.cos(theta[k])-np.cos(theta[k-1])),
                        R*(np.sin(theta[k])-np.sin(theta[k-1])),
                        p/N])
