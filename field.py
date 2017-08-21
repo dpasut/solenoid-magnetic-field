@@ -94,7 +94,7 @@ def find_field():
                 values[3, j] = abs(y[j]) - R
 
 # Calculate Forces
-def find_forces():
+def find_BdotGradB():
     for j in tqdm(range(1, y.size - 1)):
         for k in range(1, z.size - 1):
             bxy = (Bx[j+1, k] - Bx[j-1, k]) / 2*h
@@ -180,8 +180,10 @@ if __name__ == '__main__':
     for i in range(0, theta.size):
         theta[i] = i*2*np.pi/N
 
-    # plot_solenoid()
+    #plot_solenoid()
 
-    find_field()
+    insidez = find_field()
+    find_BdotGradB()
 
-    plot_field()
+    #plot_field()
+    plot_forces()
