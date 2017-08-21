@@ -2,22 +2,23 @@
 # Author: Daniel Pasut <daniel.pasut@uoit.ca>
 
 import numpy as np
-#import seaborn as sns
+import seaborn as sns
 import matplotlib.pyplot as plt
-#from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D
 from numpy import linalg as LA
-#from pylab import *
+from pylab import *
 from tqdm import tqdm
+import sys
 
 gs = 30  # Grid spacing
 R = 0.5  # Radius of loop (mm)
 wr = 0.1  # Radius of wire (mm)
 p = 0.1  # Pitch of wire, centre-to-centre (mm)
 N = 100  # Number of segments in single loop of wire
-n = 1  # Number of loops of wire
+n = int(sys.argv[1])#1  # Number of loops of wire
 theta = np.empty(n*N)
 mu = 1  # Magnetic susceptibility
-I = 1  # Current
+I = -1  # Current
 C = mu*I/(4*np.pi)
 xmin = -2.1
 xmax = 2.1
@@ -37,12 +38,13 @@ By = np.zeros([gs, gs])  # y components of field matrix
 Bz = np.zeros([gs, gs])  # z components of field matrix
 norms = np.zeros([gs, gs])  # matrix for norms at each point
 
-Fx = np.zeros([gs, gs])  # smaller matrix size for forces
-Fy = np.zeros([gs, gs])  # edge cases are ignored
-Fz = np.zeros([gs, gs])  # avoids unwanted symmetry
+Fx = np.zeros([gs, gs])
+Fy = np.zeros([gs, gs])
+Fz = np.zeros([gs, gs])
 
 values = np.zeros([4,gs])
 xvals = np.arange(gs)
+insidez = 0.
 
 
 # Function to do summation over all segments of wire
