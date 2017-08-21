@@ -70,14 +70,19 @@ def find_B(pos, theta, R, N, wr):
 def plot_solenoid():
     wire = np.array([R*np.cos(theta), R*np.sin(theta), p*theta/np.pi])
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(20, 16), dpi=600, facecolor='w', edgecolor='k')
     ax = fig.gca(projection='3d')
-    ax.plot(wire[0], wire[1], wire[2], label='wire')
-    ax.legend()
-    plt.savefig('wire-circle.svg', transparent=True,
+    ax.plot(wire[0], wire[1], wire[2], label='wire', LineWidth=7)
+
+    ax.set_xlabel('\n' + 'X axis', fontsize=30, linespacing=4)
+    ax.set_ylabel('\n' + 'Y axis', fontsize=30, linespacing=4)
+    ax.set_zlabel('\n' + 'Z axis', fontsize=30, linespacing=4)
+    ax.xaxis._axinfo['label']['space_factor'] = 100
+
+    plt.tick_params(axis='both', which='major', labelsize=30)
+    plt.savefig('wire-loop.png', transparent=True,
                 bbox_inches='tight', pad_inches=0)
-    plt.savefig('wire-circle.jpg', bbox_inches='tight', pad_inches=0)
-    plt.show()
+    #plt.show()
 
 
 # Calculate the magnetic field and find norms
@@ -92,6 +97,10 @@ def find_field():
                 values[1, j] = By[j, k]
                 values[2, j] = Bz[j, k]
                 values[3, j] = abs(y[j]) - R
+                if j == y.size/2:
+                    insidez = Bz[j, k]
+    return insidez
+
 
 # Calculate Forces
 def find_BdotGradB():
@@ -129,10 +138,9 @@ def find_BdotGradB():
 
 
 
-
 # Plot quiver diagram
 def plot_field():
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(20, 16), dpi=600)
 
     for i in range(n):
         circ = plt.Circle((R*np.sin(np.pi/2), (4*i+1)*p/2), radius=wr,
@@ -141,40 +149,51 @@ def plot_field():
         circ = plt.Circle((R*np.sin(3*np.pi/2), (4*i+3)*p/2), radius=wr,
                           color='k', alpha=0.5)
         ax.add_patch(circ)
-        plt.plot(R*np.sin(np.pi/2), (4*i+1)*p/2, 'ok', R*np.sin(3*np.pi/2),
-                 (4*i+3)*p/2, '*k')
+        plt.plot(R*np.sin(np.pi/2), (4*i+1)*p/2, '*k', R*np.sin(3*np.pi/2),
+                 (4*i+3)*p/2, 'ok')
 
     ax.quiver(Y, Z, By, Bz)
     ax.set_xlim((ymin, ymax))  # set the xlim to xmin, xmax
     ax.set_ylim((zmin, zmax))
-    ax.set(aspect=1, title='Quiver Plot - field lines')
-    plt.savefig('field-circle.svg', transparent=True,
+
+    ax.spines['bottom'].set_color('k')
+    ax.spines['top'].set_color('white')
+    #ax.set(aspect=1, title='Quiver Plot - field lines')
+    plt.xlabel('Y axis', fontsize=30)
+    plt.ylabel('Z axis', fontsize=30)
+    plt.tick_params(axis='both', which='major', labelsize=30)
+    plt.savefig('field-loop.png', transparent=True,
                 bbox_inches='tight', pad_inches=0)
-    plt.savefig('field-circle.jpg', bbox_inches='tight', pad_inches=0)
-    plt.show()
+    plt.savefig('field-loop.jpg', bbox_inches='tight', pad_inches=0)
+    #plt.show()
 
 # Plot quiver diagram
 def plot_forces():
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(20, 16), dpi=600)
 
-    for i in range(n):
-        circ = plt.Circle((R*np.sin(np.pi/2), (4*i+1)*p/2), radius=wr,
-                          color='k', alpha=0.5)
-        ax.add_patch(circ)
-        circ = plt.Circle((R*np.sin(3*np.pi/2), (4*i+3)*p/2), radius=wr,
-                          color='k', alpha=0.5)
-        ax.add_patch(circ)
-        plt.plot(R*np.sin(np.pi/2), (4*i+1)*p/2, 'ok', R*np.sin(3*np.pi/2),
-                 (4*i+3)*p/2, '*k')
+ #   for i in range(n):
+ #       circ = plt.Circle((R*np.sin(np.pi/2), (4*i+1)*p/2), radius=wr,
+ #                         color='k', alpha=0.5)
+ #       ax.add_patch(circ)
+ #       circ = plt.Circle((R*np.sin(3*np.pi/2), (4*i+3)*p/2), radius=wr,
+ #                         color='k', alpha=0.5)
+ #       ax.add_patch(circ)
+ #       plt.plot(R*np.sin(np.pi/2), (4*i+1)*p/2, 'ok', R*np.sin(3*np.pi/2),
+ #                (4*i+3)*p/2, '*k')
 
     ax.quiver(Y, Z, Fy, Fz)
-    ax.set_xlim((ymin, ymax))  # set the xlim to xmin, xmax
-    ax.set_ylim((zmin, zmax))
-    ax.set(aspect=1, title='Quiver Plot - forces')
-    plt.savefig('forces-loop.svg', transparent=True,
+    ax.set_xlim((ymin +0.5, ymax -0.5))  # set the xlim to xmin, xmax
+    ax.set_ylim((2*p*n, zmax))
+    ax.spines['bottom'].set_color('k')
+    ax.spines['top'].set_color('white')
+    plt.xlabel('Y axis', fontsize=30)
+    plt.ylabel('Z axis', fontsize=30)
+    plt.tick_params(axis='both', which='major', labelsize=30)
+    ax.set(aspect=1)
+    plt.savefig('forces-loop.png', transparent=True,
                 bbox_inches='tight', pad_inches=0)
     plt.savefig('forces-loop.jpg', bbox_inches='tight', pad_inches=0)
-    plt.show()
+    #plt.show()
 
 if __name__ == '__main__':
     for i in range(0, theta.size):
@@ -187,3 +206,40 @@ if __name__ == '__main__':
 
     #plot_field()
     plot_forces()
+    #plt.figure()
+    #plt.plot(xvals[18:gs], values[0, 18:gs],'b-',label='x component')
+    #plt.plot(xvals[18:gs], values[0, 18:gs]*values[3, 18:gs],'g-',label='x component times distance')
+    #plt.plot(xvals[18:gs], values[1, 18:gs],'g-', label='y component')
+    #plt.plot(xvals, values[2],'r-')
+    #plt.legend(['x component of magnetic field', 'x component times distance to wire'])
+    #plt.savefig('test2.jpg', bbox_inches='tight', pad_inches=0)
+    #plt.show()
+
+    #with open('values.txt', 'a') as f:
+    #    f.write("%i %5.4f %5.4f\n" %(n, min(values[0, 18:gs]*values[3, 18:gs]), insidez))
+    #print(n, min(values[0, 18:gs]*values[3, 18:gs]), insidez)
+
+    #with open('values.txt', 'r') as g:
+    #    nvals, xcompXdist, bzvals = np.loadtxt('values.txt', delimiter=' ', unpack=True)
+
+    #plt.figure()
+    #plt.plot(nvals, xcompXdist,'b-',label='x component')
+    #plt.plot(nvals, bzvals/nvals, 'r-')
+    #plt.legend(['minimum x component times distance to wire'])
+    #plt.title('x component times distance to wire for various number of loops')
+    #plt.xlabel('Number of loops')
+    #plt.ylabel('Magnitude of Magnetic Field')
+   #plt.savefig('xcomp_times_dist.jpg', bbox_inches='tight', pad_inches=0)
+    #plt.show()
+#    print(xvals[19:gs], values[0, 19:gs], values[3,19:gs])
+    #plt.figure()
+    #plt.plot(xvals[19:gs], np.log(abs(values[0, 19:gs])) - np.log(abs(values[3, 19:gs])))
+    #plt.plot(np.log(abs(values[0, 19:gs])), np.log(abs(values[3, 19:gs])))
+    #plt.savefig('loglog.jpg', bbox_inches='tight', pad_inches=0)
+    #plt.show()
+
+    #plt.figure()
+    #plt.plot(xvals[19:gs], np.log(abs(values[0, 19:gs])) + np.log(abs(values[3, 19:gs])))
+    #plt.plot(np.log(abs(values[0, 19:gs])), np.log(abs(values[3, 19:gs])))
+    #plt.savefig('log.jpg', bbox_inches='tight', pad_inches=0)
+    #plt.show()
