@@ -9,6 +9,8 @@ from numpy import linalg as LA
 from pylab import *
 from tqdm import tqdm
 import sys
+from scipy.integrate import odeint
+from scipy.integrate import ode
 
 # Solenoid
 gs = 30  # Grid spacing
@@ -19,7 +21,7 @@ N = 100  # Number of segments in single loop of wire
 n = int(sys.argv[1])#1  # Number of loops of wire
 theta = np.empty(n*N)
 mu = 1  # Magnetic susceptibility
-I = 1  # Current
+I = 10  # Current
 C = mu*I/(4*np.pi)
 
 # Geometry
@@ -33,33 +35,34 @@ x = np.linspace(xmin, xmax, gs)  # Positions for x
 y = np.linspace(ymin, ymax, gs)  # Positions for y
 z = np.linspace(zmin, zmax, gs)  # Positions for z
 Y, Z = np.meshgrid(y, z, indexing='ij')  # Grid for y/z
-h = (ymax - ymin)/gs
 
 # Cell/beads
-Rb = 1
-Rc = 1
-muo = 1
-muw = 1
-chi = 1
-rhob = 1
-rhoc = 1
-rhow = 1
+Rb = 3.5e-6
+Rc = 3.5e-5
+muo = np.pi*4e-7
+muw = 10e-3
+chi = 0.17
+rhob = 1.5e3
+rhoc = 1020
+rhow = 1000
 g = 9.81
 
 MagConst = (4*np.pi*Rb**3*chi/(3*muo))
 ViscConst = 6*np.pi*muw*Rc
 m = (4/3)*np.pi*Rb**3*rhob + (4/3)*np.pi*(Rc**3-Rb**3)*rhoc
+Vc = (4/3)*np.pi*Rc**3
+Vb = (4/3)*np.pi*Rb**3
 
 # Book keeping
-maxcount = 10000
-position = np.zeros([maxcount, 3])
-position[0] = [xmax, ymax, zmax]
-BdotGradB = np.zeros([maxcount, 3])
-disp = np.zeros(3)
+BdotGradB = np.zeros([1, 3])
 V = np.zeros(3)
-tstep = 0.1
+tstep = 0.01
+t0 = 0
+t1 = 1
+t = np.arange(t0, t1, tstep)
 
-
+Vt = g*(rhoc-rhow)*Vc/(6*np.pi*muw*Rc) #terminal velocity
+L = 1e-2
 
 # Function to do summation over all segments of wire
 def find_B(pos, theta, R, N, wr):
