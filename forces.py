@@ -110,5 +110,14 @@ def func(X, t):
     yval = 0
     zval = -1
     return [xval, yval, zval]
+
+def funcmag(X, t):
+    pos = np.array([X[0], X[1], X[2]])
+    BdotGradB = find_BdotGradB(pos)
+    xval = (1/Vt)*(Vb*chi/(muw*muo*6*np.pi*Rc))*(1/L)*BdotGradB[0]
+    yval = (1/Vt)*(Vb*chi/(muw*muo*6*np.pi*Rc))*(1/L)*BdotGradB[1]
+    zval = -1 + (1/Vt)*(Vb*chi/(muw*muo*6*np.pi*Rc))*(1/L)*BdotGradB[2]
+    return [xval, yval, zval]
+
 if __name__ == '__main__':
     run()
