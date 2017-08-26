@@ -80,5 +80,29 @@ def find_B(pos, theta, R, N, wr):
 
 
 
+def find_BdotGradB(pos):
+    h = np.pi*R/N
+
+    Bx, By, Bz = find_B(pos, theta, R, N, wr)
+
+    Bx_right, By_right, Bz_right = find_B(pos + [0,h,0], theta, R, N, wr)
+    Bx_left, By_left, Bz_left = find_B(pos - [0,h,0], theta, R, N, wr)
+    Bx_up, By_up, Bz_up = find_B(pos + [0,0,h], theta, R, N, wr)
+    Bx_down, By_down, Bz_down = find_B(pos - [0,0,h], theta, R, N, wr)
+
+    bxy = (Bx_right - Bx_left) / 2*h
+    byy = (By_right - By_left) / 2*h
+    bzy = (Bz_right - Bz_left) / 2*h
+
+    bxz = (Bx_up - Bx_down) / 2*h
+    byz = (By_up - By_down) / 2*h
+    bzz = (Bz_up - Bz_down) / 2*h
+
+    # X derivatives calculated by divergence and curl of B
+    bxx = -byy - bzz
+    byx =  bxy
+    bzx =  - bxz
+    return [Bx*bxx + By*bxy + Bz*bxz, Bx*byx + By*byy + Bz*byz, Bx*bzx + By*bzy + Bz*bzz]
+
 if __name__ == '__main__':
     run()
