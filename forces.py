@@ -104,5 +104,11 @@ def find_BdotGradB(pos):
     bzx =  - bxz
     return [Bx*bxx + By*bxy + Bz*bxz, Bx*byx + By*byy + Bz*byz, Bx*bzx + By*bzy + Bz*bzz]
 
+
+def func(X, t):
+    xval = 0
+    yval = 0
+    zval = -1
+    return [xval, yval, zval]
 if __name__ == '__main__':
     run()
