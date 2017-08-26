@@ -119,5 +119,14 @@ def funcmag(X, t):
     zval = -1 + (1/Vt)*(Vb*chi/(muw*muo*6*np.pi*Rc))*(1/L)*BdotGradB[2]
     return [xval, yval, zval]
 
+
+def run(X0):
+    X = odeint(func, X0, t)
+    Xmag = odeint(funcmag,X0,t)
+    return X, Xmag
+
+
+
+
 if __name__ == '__main__':
     run()
