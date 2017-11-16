@@ -2,7 +2,7 @@
 # Author: Daniel Pasut <daniel.pasut@uoit.ca>
 
 import numpy as np
-import seaborn as sns
+#import seaborn as sns
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from numpy import linalg as LA
@@ -31,7 +31,6 @@ y = np.linspace(ymin, ymax, gs)  # Positions for y
 z = np.linspace(zmin, zmax, gs)  # Positions for z
 Y, Z = np.meshgrid(y, z, indexing='ij')  # Grid for y/z
 h = (ymax - ymin)/gs
-
 # x's are all zero, looking at plane
 Bx = np.zeros([gs, gs])  # x components don't change
 By = np.zeros([gs, gs])  # y components of field matrix
@@ -140,6 +139,14 @@ def find_BdotGradB():
 
 # Plot quiver diagram
 def plot_field():
+    print(By[29])
+    with open('field.dat','a+') as f:
+        f.write("y z u v\n")
+        for j in range(size(y)):
+            for k in range(size(z)):
+                f.write("%.4f %.4f %.4f %.4f\n" % (y[j], z[k], By[j,k], Bz[j,k]))
+
+
     fig, ax = plt.subplots(figsize=(20, 16), dpi=600)
 
     for i in range(n):
@@ -151,7 +158,6 @@ def plot_field():
         ax.add_patch(circ)
         plt.plot(R*np.sin(np.pi/2), (4*i+1)*p/2, '*k', R*np.sin(3*np.pi/2),
                  (4*i+3)*p/2, 'ok')
-
     ax.quiver(Y, Z, By, Bz)
     ax.set_xlim((ymin, ymax))  # set the xlim to xmin, xmax
     ax.set_ylim((zmin, zmax))
@@ -162,10 +168,10 @@ def plot_field():
     plt.xlabel('Y axis', fontsize=30)
     plt.ylabel('Z axis', fontsize=30)
     plt.tick_params(axis='both', which='major', labelsize=30)
-    plt.savefig('field-loop.png', transparent=True,
+    plt.savefig('field-loop-test.png', transparent=True,
                 bbox_inches='tight', pad_inches=0)
-    plt.savefig('field-loop.jpg', bbox_inches='tight', pad_inches=0)
-    #plt.show()
+    plt.savefig('field-loop-test.jpg', bbox_inches='tight', pad_inches=0)
+    plt.show()
 
 # Plot quiver diagram
 def plot_forces():
@@ -204,8 +210,8 @@ if __name__ == '__main__':
     insidez = find_field()
     find_BdotGradB()
 
-    #plot_field()
-    plot_forces()
+    plot_field()
+    #plot_forces()
     #plt.figure()
     #plt.plot(xvals[18:gs], values[0, 18:gs],'b-',label='x component')
     #plt.plot(xvals[18:gs], values[0, 18:gs]*values[3, 18:gs],'g-',label='x component times distance')
